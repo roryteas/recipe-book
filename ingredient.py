@@ -1,8 +1,10 @@
 class Ingredient:
-    def __init__(self, id = None, name= "", primary_category = None):
+    def __init__(self, id = None, name= "", primary_category = None, unit = "g", quantity=None):
         
         self.id = id
         self.name = name
+        self.unit = unit
+        self.quantity = quantity
         self.primary_category = primary_category
 
     def set_name(self, name):
@@ -12,4 +14,4 @@ class Ingredient:
         self.primary_category = category
 
     def __repr__(self):
-        return f"Ingredient Object(\n{name}\nCategory: {primary_category}\n)"
+        return f"Ingredient Object(\n{self.name}\nCategory: {self.primary_category}\n)"
