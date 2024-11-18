@@ -7,6 +7,7 @@ from create_script_from_js_file import *
 from create_style_from_css_file import *
 import sqlite3
 import os
+import json
 from flask import Flask, url_for, request, Response
 
 app = Flask(__name__)
@@ -57,6 +58,16 @@ def add_ingredient_route():
     except:
         return Response("{}", status=400, mimetype='application/json')
 
+@app.route("/add_recipe", methods=["POST"])
+def add_recipe_route():
+    recipe_json = json.loads(request.form['recipe'])
+    ingredients = list(map(lambda x: Ingredient(id=x['id'], unit=x['unit'], quantity= x['quantity']),recipe_json["ingredients"]))
+    title = recipe_json["title"]
+    text = recipe_json["recipe_text"]
+    recipe = Recipe(title=title, ingredients=ingredients, recipe_text=text)
+    print(insert_recipe_object(recipe))
+    return "done"
+
 @app.route("/delete_dummies")
 def delete_dummies():
     dummies = cur.execute('select id from recipe where title ="Scrambled Eggs 2"').fetchall()
@@ -68,9 +79,19 @@ def delete_dummies():
 @app.route("/")
 def home():
     recipes = select_all_recipes()
-    return f"<html>{html_head_construction()}<body onload='add_initial_dropdown()'><p>{html_all_recipes(recipes)}<p>\
-            <p><b>Add a New Recipe</b></p>\
-             <p>{html_add_recipe_form()}</p>\
-            <p><b>Add a Ingredient</b></p>\
-             <p>{html_add_ingredient_form()}</p></body></html>"
+    return f"<html>{html_head_construction()}\
+                <body>\
+                 <p>{html_all_recipes(recipes)}<p>\
+                </body>\
+              </html>"
+
+
+@app.route("/add_recipe")
+def add_recipe_page():
+    return f"<html>{html_head_construction()}\
+            <body onload='add_initial_dropdown()'>\
+             {html_add_recipe_form()}\
+            </body>\
+            </html>"
+            
 

@@ -10,6 +10,7 @@ def insert_recipe_object(recipe):
     recipe_id = cur.lastrowid
     for ingredient in recipe.ingredients:
         insert_recipe_ingredient(recipe_id, ingredient.id, ingredient.unit, ingredient.quantity)
+    return select_recipe_object(recipe_id)
 
 def insert_recipe_ingredient(recipe_id,ingredient_id, ingredient_unit, ingredient_quantity):
     cur.execute(f'insert into recipe_ingredient (recipe_id, ingredient_id, ingredient_unit, ingredient_quantity) values ({recipe_id}, {ingredient_id}, "{ingredient_unit}", {ingredient_quantity})')
