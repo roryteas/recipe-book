@@ -20,15 +20,16 @@ cur,conn = connect_to_recipe_db()
 
 
 
-
-def html_head_construction():
-    script_url = url_for('static', filename = 'test_script.js')
+def html_page_construction(script="test_script.js",css='styles.css',inner_html='', onload=''):
+    script_url = url_for('static', filename = script)
     script = f"<script src='{script_url}'></script>"
-    css_url = url_for('static', filename = 'styles.css')
+    css_url = url_for('static', filename = css)
     css = f'<link rel="stylesheet" href="{css_url}">'
-    head = f"<Head>{script}{css}</Head>"
-    return head
+    favicon = f"<link rel='shortcut icon' href={ url_for('static', filename='favicon.ico') }>"
+    head = f"<Head>{script}{css}{favicon}</Head>"
+    return f"<html>{head}<body onload={onload}>{inner_html}</body></html>"
     
+
     
 
 @app.route("/all_ingredients")
@@ -65,8 +66,12 @@ def add_recipe_route():
     title = recipe_json["title"]
     text = recipe_json["recipe_text"]
     recipe = Recipe(title=title, ingredients=ingredients, recipe_text=text)
-    print(insert_recipe_object(recipe))
-    return "done"
+    try:
+        insert_recipe_object(recipe)
+        return Response("{}", status=201, mimetype='application/json')
+    except:
+        return Response("{}", status=400, mimetype='application/json')
+
 
 @app.route("/delete_dummies")
 def delete_dummies():
@@ -79,19 +84,12 @@ def delete_dummies():
 @app.route("/")
 def home():
     recipes = select_all_recipes()
-    return f"<html>{html_head_construction()}\
-                <body>\
-                 <p>{html_all_recipes(recipes)}<p>\
-                </body>\
-              </html>"
+    return html_page_construction(inner_html=html_all_recipes(recipes))
+                 
 
 
 @app.route("/add_recipe")
 def add_recipe_page():
-    return f"<html>{html_head_construction()}\
-            <body onload='add_initial_dropdown()'>\
-             {html_add_recipe_form()}\
-            </body>\
-            </html>"
+    return html_page_construction(inner_html=html_add_recipe_form(),onload='add_initial_dropdown()')
             
 
