@@ -5,7 +5,6 @@ from ingredient import *
 
 class test_recipe(unittest.TestCase):
     
-    a = Recipe()
     def test_blank_recipe(self):
 
         r = Recipe()
@@ -24,6 +23,5 @@ class test_recipe(unittest.TestCase):
         self.assertTrue(ingred_t2 in recipe_t.ingredients)
         self.assertTrue(ingred_t in recipe_t.ingredients)
 
-    
-    
+
 

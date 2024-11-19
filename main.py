@@ -30,8 +30,6 @@ def html_page_construction(script="test_script.js",css='styles.css',inner_html='
     return f"<html>{head}<body onload={onload}>{inner_html}</body></html>"
     
 
-    
-
 @app.route("/all_ingredients")
 def get_all_ingredients():
     ingredients = select_all_ingredients()
