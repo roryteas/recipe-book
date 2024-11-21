@@ -1,5 +1,6 @@
 from recipe import *
 from crud import *
+from plan import *
 from add_recipe_page import *
 from ingredient import *
 from connection import *
@@ -18,7 +19,21 @@ cur,conn = connect_to_recipe_db()
 # scrambled_eggs = Recipe(title="Scrambled Eggs",ingredients=[egg],recipe_text="Heat pan on medium\ncrack eggs into bowl\nstir eggs\npour into pan\nstir in pan until 80% of desired consistency\nseason with salt and pepper and remove from heat\n")
 # insert_recipe_object(scrambled_eggs)
 
+def add_dummy_meal_plan():
 
+    egg_id = insert_ingredient(Ingredient(name="Egg", primary_category="Dairy and Eggs"))
+    egg = select_ingredient(egg_id)
+    scrambled_eggs = Recipe(title="Scrambled Eggs",ingredients=[egg],recipe_text="Heat pan on medium\ncrack eggs into bowl\nstir eggs\npour into pan\nstir in pan until 80% of desired consistency\nseason with salt and pepper and remove from heat\n")
+    rowid = insert_recipe_object(scrambled_eggs).id
+    recipe = select_recipe(rowid)
+    plan = Plan(name='Test Plan', meal_list=[recipe,recipe]) 
+    plan_id = insert_plan_object(plan).id
+    plan = select_plan_object(plan_id)
+    return f'{plan}'
+    
+@app.route("/test_plan")
+def test_plan():
+    return add_dummy_meal_plan()
 
 def html_page_construction(script="test_script.js",css='styles.css',inner_html='', onload=''):
     script_url = url_for('static', filename = script)
@@ -45,6 +60,9 @@ def add_dummy_recipe():
     scrambled_eggs = Recipe(title="Scrambled Eggs 2",ingredients=[egg],recipe_text="Just shake the eggs up")
     insert_recipe_object(scrambled_eggs)
     return "done"
+
+
+
 
 @app.route("/add_ingredient", methods=["POST"])
 def add_ingredient_route():
