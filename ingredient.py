@@ -14,4 +14,4 @@ class Ingredient:
         self.primary_category = category
 
     def __repr__(self):
-        return f"Ingredient Object(\n{self.name}\nCategory: {self.primary_category}\n)"
+        return f"Ingredient Object(\n{self.name}\nCategory: {self.primary_category}\nUnit:{self.unit}\nQuantity:{self.quantity}\n"

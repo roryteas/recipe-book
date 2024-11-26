@@ -2,6 +2,7 @@ from recipe import *
 from crud import *
 from plan import *
 from add_recipe_page import *
+from add_plan_page import html_add_plan_form
 from ingredient import *
 from connection import *
 from create_script_from_js_file import *
@@ -51,6 +52,12 @@ def get_all_ingredients():
     ingredients_json = str(list(map(lambda x: {"id":x.id, "name":x.name, "primary_category": x.primary_category},ingredients))).replace("'", '"')
     return Response(ingredients_json, status=200, mimetype='application/json')
 
+@app.route("/all_recipes")
+def get_all_recipes():
+    recipes = select_all_recipes()
+    recipes_json = str(list(map(lambda x: {"id":x.id, "title":x.title, "ingredients": str(list(map(lambda x: {"id":x.id, "name":x.name, "primary_category": x.primary_category},x.ingredients)))
+ , "recipe_text": x.recipe_text},recipes))).replace("'", '"')
+    return Response(recipes_json, status=200, mimetype='application/json')
 
 @app.route("/add_dummy_item")
 def add_dummy_recipe():
@@ -108,4 +115,6 @@ def home():
 def add_recipe_page():
     return html_page_construction(inner_html=html_add_recipe_form(),onload='add_initial_dropdown()')
             
-
+@app.route('/add_plan')
+def add_plan_page():
+    return html_page_construction(inner_html=html_add_plan_form(), onload='add_plan_fieldset()')
