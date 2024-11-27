@@ -2,8 +2,8 @@ from recipe import *
 from crud import *
 from plan import *
 from add_recipe_page import *
-from add_plan_page import html_add_plan_form
 from ingredient import *
+from add_plan.add_plan_page import *
 from connection import *
 from create_script_from_js_file import *
 from create_style_from_css_file import *
@@ -55,8 +55,9 @@ def get_all_ingredients():
 @app.route("/all_recipes")
 def get_all_recipes():
     recipes = select_all_recipes()
-    recipes_json = str(list(map(lambda x: {"id":x.id, "title":x.title, "ingredients": str(list(map(lambda x: {"id":x.id, "name":x.name, "primary_category": x.primary_category},x.ingredients)))
+    recipes_json = str(list(map(lambda x: {"id":x.id, "title":x.title, "ingredients": list(map(lambda x: {"id":x.id, "name":x.name, "primary_category": x.primary_category, "unit": x.unit, "quantity": x.quantity},x.ingredients))
  , "recipe_text": x.recipe_text},recipes))).replace("'", '"')
+    print(recipes_json)
     return Response(recipes_json, status=200, mimetype='application/json')
 
 @app.route("/add_dummy_item")
